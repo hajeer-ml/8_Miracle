@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent= new Intent(MainActivity.this , spltwo.class);
                     startActivities(new Intent[]{intent});
                     finish();
-                }, 4200
+                }, 4000
         );
 
     }
