@@ -34,34 +34,50 @@
         android:text="  Let’s enter The gateway to knowledge.\n The wonders of science.\n The depths of history.\n The world of fiction."
         android:textColor="@color/Brown2"
         android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text1" />
+        app:layout_constraintTop_toBottomOf="@+id/text1"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2"
-        app:srcCompat="@drawable/undr" />
-
-    <Button
-        android:id="@+id/next"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="36dp"
-        android:backgroundTint="@color/Beige"
-
-        android:fontFamily="@font/pacifico"
-        android:text="Shop now! "
-        android:textColor="@color/Brown3"
-        android:textSize="20sp"
-        android:textStyle="bold"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="442dp"
+        android:layout_height="441dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="415dp"
+            android:layout_height="331dp"
+            android:paddingBottom="28dp"
+            app:layout_constraintBottom_toTopOf="@+id/next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/undraw_reading" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/Beige"
+
+            android:fontFamily="@font/pacifico"
+            android:paddingTop="0dp"
+            android:text="Shop now! "
+            android:textColor="@color/Brown3"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
