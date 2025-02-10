@@ -19,9 +19,8 @@
         android:id="@+id/navbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_alignParentBottom="true"
-
+        android:layout_marginBottom="19dp"
         android:background="@color/Beige"
         app:mbn_backgroundBottomColor="@color/Brown1"
         app:mbn_circleColor="@color/Brown1"
@@ -32,6 +31,6 @@
         app:mbn_hasAnimation="true"
         app:mbn_rippleColor="@color/Brown3"
         app:mbn_selectedIconColor="@color/Beige"
-        app:mbn_shadowColor="@color/Beige" />
+        app:mbn_shadowColor="@color/white" />
 
 </RelativeLayout>
