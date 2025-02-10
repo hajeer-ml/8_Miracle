@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".Home"
+    android:background="@color/Beige">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/textv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/pacifico"
+            android:text="8.Miracle"
+            android:textColor="@color/Brown3"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <!-- زر البحث على اليسار -->
+        <ImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="125dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Search"
+            android:padding="10dp"
+            android:src="@drawable/search" />
+
+        <!-- زر الإشعارات على اليمين -->
+        <ImageButton
+            android:id="@+id/notificationButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="125dp"
+            android:layout_marginEnd="35dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Notifi"
+            android:padding="10dp"
+            android:src="@drawable/notification" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/parentLa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="16dp"
+            >
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
