@@ -1,5 +1,7 @@
 package com.example.a8_miracle;
 
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,141 +32,145 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Home extends Fragment implements ChildAdapter.OnItemClickListener {
+public class Home extends Fragment implements BookAdapter.OnItemClickListener {
     private RequestQueue requestQueue;
-    private LinearLayout parentLayout;
-    private Map<Integer, ChildAdapter> adapterMap = new HashMap<>();
-    private HomeViewModel viewModel;
+    private LinearLayout parentLayout;  // Parent layout for dynamic views
+    private Map<Integer, BookAdapter> adapterMap = new HashMap<>();
+    private Context context;
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myView = inflater.inflate(R.layout.fragment_home, container, false);
-        if (container != null) {
-            container.removeAllViews();
-        }
-        parentLayout = myView.findViewById(R.id.parentLa);
-        requestQueue = Volley.newRequestQueue(requireActivity()); // Use requireActivity() instead of requireContext()
-        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        return myView;
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        context = getContext();  // Initialize context
+        parentLayout = view.findViewById(R.id.parent_layout);  // Parent layout in XML
+        requestQueue = Volley.newRequestQueue(context);
         fetchCategories();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         if (requestQueue != null) {
-            requestQueue.cancelAll(this);
+            requestQueue.stop(); // Stop the request queue to release resources
         }
     }
 
     private void fetchCategories() {
-        if (isAdded()) { // Ensure the fragment is attached before proceeding
-            parentLayout.removeAllViews(); // Prevent duplication
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://akram.serv00.net/Meet/get_categories.php", null,
-                    response -> {
-                        requireActivity().runOnUiThread(() -> { // Ensure UI updates are on the main thread
-                            Log.d("Home", "Categories Response: " + response.toString());
-                            if (response.length() == 0) {
-                                Log.w("Home", "No categories found.");
-                                return;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://akram.serv00.net/Meet/get_categories.php", null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("MainActivity", "Categories Response: " + response.toString());
+
+                        if (response.length() == 0) {
+                            Log.w("MainActivity", "No categories found.");
+                            return;
+                        }
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                int categoryID = jsonObject.getInt("CategoryID");
+                                String catName = jsonObject.getString("CatName");
+
+                                // Create a TextView for the category name
+                                TextView categoryTitle = new TextView(context);
+                                categoryTitle.setText(catName);
+                                categoryTitle.setTextSize(18);
+                                categoryTitle.setPadding(20, 40, 20, 10);
+
+                                // Create a RecyclerView for books under this category
+                                RecyclerView recyclerView = new RecyclerView(context);
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                recyclerView.setLayoutParams(layoutParams);
+
+                                // Set horizontal scrolling
+                                recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+
+                                // Add TextView and RecyclerView to the parent layout
+                                parentLayout.addView(categoryTitle);
+                                parentLayout.addView(recyclerView);
+
+                                // Set up adapter and fetch books
+                                BookAdapter adapter = new BookAdapter(context, new ArrayList<>());
+                                adapter.setOnItemClickListener(Home.this);
+                                adapterMap.put(categoryID, adapter);
+                                recyclerView.setAdapter(adapter);
+
+                                fetchBooks(categoryID);
+                            } catch (Exception e) {
+                                Log.e("MainActivity", "Error fetching categories: " + e.getMessage());
                             }
-                            for (int i = 0; i < response.length(); i++) {
-                                try {
-                                    JSONObject jsonObject = response.getJSONObject(i);
-                                    int categoryID = jsonObject.getInt("CategoryID");
-                                    String catName = jsonObject.getString("CatName");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("MainActivity", "Error fetching categories: " + error.getMessage());
+            }
+        });
 
-                                    TextView categoryTitle = new TextView(requireActivity());
-                                    categoryTitle.setText(catName);
-                                    categoryTitle.setTextSize(18);
-                                    categoryTitle.setPadding(20, 40, 20, 10);
-                                    RecyclerView recyclerView = new RecyclerView(requireActivity());
-                                    recyclerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT));
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-                                    parentLayout.addView(categoryTitle);
-                                    parentLayout.addView(recyclerView);
-
-                                    ChildAdapter adapter = new ChildAdapter(requireActivity(), new ArrayList<>());
-                                    adapter.setOnItemClickListener(this);
-                                    adapterMap.put(categoryID, adapter);
-                                    recyclerView.setAdapter(adapter);
-
-                                    fetchBooks(categoryID);
-                                } catch (Exception e) {
-                                    Log.e("Home", "Error fetching categories: " + e.getMessage());
-                                }
-                            }
-                        });
-                    }, error -> Log.e("Home", "Error fetching categories: " + error.getMessage()));
-
-            requestQueue.add(jsonArrayRequest);
-        }
+        requestQueue.add(jsonArrayRequest);
     }
 
     private void fetchBooks(int categoryID) {
-        if (isAdded()) { // Ensure the fragment is attached before proceeding
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://akram.serv00.net/Meet/get_books.php?category_id=" + categoryID, null,
-                    response -> {
-                        requireActivity().runOnUiThread(() -> { // Ensure UI updates are on the main thread
-                            Log.d("Home", "Books Response: " + response.toString());
-                            List<ChildMC> books = new ArrayList<>();
-                            for (int i = 0; i < response.length(); i++) {
-                                try {
-                                    JSONObject jsonObject = response.getJSONObject(i);
-                                    ChildMC book = new ChildMC(
-                                            jsonObject.getInt("BookID"),
-                                            jsonObject.getString("Title"),
-                                            jsonObject.getString("Author"),
-                                            jsonObject.getDouble("Price"),
-                                            (float) jsonObject.getDouble("Rating"),
-                                            jsonObject.getInt("StockQuantity"),
-                                            jsonObject.getString("Description"),
-                                            jsonObject.getString("CoverImage"),
-                                            jsonObject.getString("PublishedDate"),
-                                            jsonObject.getInt("CategoryID")
-                                    );
-                                    books.add(book);
-                                } catch (Exception e) {
-                                    Log.e("Home", "Error parsing book: " + e.getMessage());
-                                }
-                            }
-                            if (adapterMap.containsKey(categoryID)) {
-                                ChildAdapter adapter = adapterMap.get(categoryID);
-                                adapter.childMCList(books);
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-                    }, error -> Log.e("Home", "Error fetching books: " + error.getMessage()));
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://akram.serv00.net/Meet/get_books.php?category_id=" + categoryID, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("MainActivity", "Books Response: " + response.toString());
 
-            requestQueue.add(jsonArrayRequest);
-        }
+                        List<Book> books = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                int bookID = jsonObject.getInt("BookID");
+                                String title = jsonObject.getString("Title");
+                                String author = jsonObject.getString("Author");
+                                double price = jsonObject.getDouble("Price");
+                                float rating = (float) jsonObject.getDouble("Rating");
+                                int stockQuantity = jsonObject.getInt("StockQuantity");
+                                String description = jsonObject.getString("Description");
+                                String coverImage = jsonObject.getString("CoverImage");
+                                String publishedDate = jsonObject.getString("PublishedDate");
+                                int categoryID = jsonObject.getInt("CategoryID");
+
+                                Book book = new Book(bookID, title, author, price, rating, stockQuantity, description, coverImage, publishedDate, categoryID);
+                                books.add(book);
+                            } catch (Exception e) {
+                                Log.e("MainActivity", "Error parsing book: " + e.getMessage());
+                            }
+                        }
+
+                        if (adapterMap.containsKey(categoryID)) {
+                            adapterMap.get(categoryID).setBookList(books);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("MainActivity", "Error fetching books: " + error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonArrayRequest);
     }
 
     @Override
-    public void onItemClick(ChildMC book) {
-        Intent intent = new Intent(requireActivity(), BookDetails.class); // Use requireActivity() instead of requireContext()
-        intent.putExtra("book_id", book.getBookID());
-        intent.putExtra("title", book.getTitle());
-        intent.putExtra("author", book.getAuthor());
-        intent.putExtra("price", book.getPrice());
-        intent.putExtra("rating", book.getRating());
-        intent.putExtra("stockQuantity", book.getStockQuantity());
-        intent.putExtra("description", book.getDescription());
-        intent.putExtra("coverImage", book.getCoverImage());
-        intent.putExtra("publishedDate", book.getPublishedDate());
-        intent.putExtra("categoryID", book.getCategoryID());
+    public void onItemClick(Book book) {
+        Intent intent = new Intent(context, BookDetails.class);
+        intent.putExtra("book", book);
         startActivity(intent);
-    }
-
-    // ViewModel class to handle lifecycle-aware data
-    public static class HomeViewModel extends androidx.lifecycle.ViewModel {
-        // Add any lifecycle-aware data here
     }
 }

@@ -1,8 +1,7 @@
 package com.example.a8_miracle;
-
 import java.io.Serializable;
 
-public class ChildMC implements Serializable {
+public class Book implements Serializable {
     private int bookID;
     private String title;
     private String author;
@@ -14,7 +13,11 @@ public class ChildMC implements Serializable {
     private String publishedDate;
     private int categoryID;
 
-    public ChildMC(int bookID, String title, String author, double price, float rating, int stockQuantity, String description, String coverImage, String publishedDate, int categoryID) {
+    // Default constructor
+    public Book() {}
+
+    // Parameterized constructor
+    public Book(int bookID, String title, String author, double price, float rating, int stockQuantity, String description, String coverImage, String publishedDate, int categoryID) {
         this.bookID = bookID;
         this.title = title;
         this.author = author;
@@ -27,6 +30,7 @@ public class ChildMC implements Serializable {
         this.categoryID = categoryID;
     }
 
+    // Getter and Setter methods
     public int getBookID() {
         return bookID;
     }
@@ -35,12 +39,28 @@ public class ChildMC implements Serializable {
         this.bookID = bookID;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getAuthor() {
         return author;
     }
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public float getRating() {
@@ -59,14 +79,6 @@ public class ChildMC implements Serializable {
         this.stockQuantity = stockQuantity;
     }
 
-    public String getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(String publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -75,35 +87,27 @@ public class ChildMC implements Serializable {
         this.description = description;
     }
 
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     public int getCategoryID() {
         return categoryID;
     }
 
     public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
-    }
-
-    public String getPrice() {
-        return String.valueOf(price);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverImage() {
-        return coverImage;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setCoverImage(String coverImage) {
-        this.coverImage = coverImage;
     }
 }
