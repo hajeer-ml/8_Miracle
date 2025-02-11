@@ -54,7 +54,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         Book book = bookList.get(position);
         holder.bookTitle.setText(book.getTitle());
 //        holder.bookAuthor.setText(book.getAuthor());
-        holder.bookPrice.setText(String.format("$%.2f", book.getPrice()));
+        holder.bookPrice.setText(String.format("%.2f DZD", book.getPrice()));
 
         // Ensure the URL is an absolute URL
         Glide.with(context).load(book.getCoverImage()).into(holder.bookCover);

@@ -19,7 +19,7 @@
             android:name=".BookDetails"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Navbar"
             android:exported="false" />
         <activity
             android:name=".Login"
@@ -28,7 +28,10 @@
             android:name=".SignUp"
             android:exported="false" />
         <activity
-            android:name=".Navbar"
+            android:name=".spltwo"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

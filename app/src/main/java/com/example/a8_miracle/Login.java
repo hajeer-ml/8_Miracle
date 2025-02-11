@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -31,7 +32,8 @@ import java.util.Map;
  public class Login extends AppCompatActivity {
     EditText Email, Password;
     Button btnLogin;
-    static final String URL="https://8miracle.serv00.net/login.php";
+    TextView txtSignUp;
+    static final String URL="https://8miracle.serv00.net/account/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,16 @@ import java.util.Map;
         Email=findViewById(R.id.Email);
         Password=findViewById(R.id.Password);
         btnLogin=findViewById(R.id.btnlogin);
+        txtSignUp=findViewById(R.id.textView3);
 
+        txtSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, SignUp.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,13 +79,10 @@ import java.util.Map;
                             if (status.equals("success")) {
                                 Toast.makeText(Login.this, "You have successfully logged in.", Toast.LENGTH_SHORT).show();
 
-                                Fragment homeFragment = new Home();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.container, homeFragment);  // استبدل `fragment_container` بـ ID الموجود في layout
-                                transaction.addToBackStack(null);
-                                transaction.commit();
+                                Intent intent = new Intent(Login.this, Navbar.class);
+                                startActivity(intent);
+                                finish();  // إغلاق شاشة تسجيل الدخول
 
-                                finish();
                             } else {
                                 Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
                             }

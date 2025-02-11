@@ -64,7 +64,7 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
     }
 
     private void fetchCategories() {
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://akram.serv00.net/Meet/get_categories.php", null,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://8miracle.serv00.net/Home/get_categories.php", null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -125,7 +125,7 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
     }
 
     private void fetchBooks(int categoryID) {
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://akram.serv00.net/Meet/get_books.php?category_id=" + categoryID, null,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://8miracle.serv00.net/Home/get_books.php?category_id=" + categoryID, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

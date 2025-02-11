@@ -6,13 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".spltwo"
-    android:background="@drawable/hu"
-    >
+    android:background="@drawable/hu">
 
     <TextView
         android:id="@+id/text1"
-        android:layout_width="300dp"
-        android:layout_height="80dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:fontFamily="@font/pacifico"
         android:gravity="center"
@@ -20,41 +19,40 @@
         android:textColor="@color/Brown3"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text2"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/pacifico"
-
-        android:text="  Let’s enter The gateway to knowledge.\n The wonders of science.\n The depths of history.\n The world of fiction."
+        android:text="Let’s enter The gateway to knowledge.\nThe wonders of science.\nThe depths of history.\nThe world of fiction."
         android:textColor="@color/Brown2"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text1"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text1" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="442dp"
-        android:layout_height="441dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text2">
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="415dp"
-            android:layout_height="331dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:paddingBottom="28dp"
             app:layout_constraintBottom_toTopOf="@+id/next"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,13 +62,14 @@
 
         <Button
             android:id="@+id/next"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:backgroundTint="@color/Beige"
-
             android:fontFamily="@font/pacifico"
-            android:paddingTop="0dp"
-            android:text="Shop now! "
+            android:text="Shop now!"
             android:textColor="@color/Brown3"
             android:textSize="20sp"
             android:textStyle="bold"
