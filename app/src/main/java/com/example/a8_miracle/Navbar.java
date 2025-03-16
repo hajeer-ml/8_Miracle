@@ -27,7 +27,8 @@ public class Navbar extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_navbar);
 
-        NafisBottomNavigation bottomNavigation = findViewById(R.id.navbar);
+        bottomNavigation = findViewById(R.id.navbar);
+
 
 
         bottomNavigation.add(new NafisBottomNavigation.Model(1, R.drawable.hom));

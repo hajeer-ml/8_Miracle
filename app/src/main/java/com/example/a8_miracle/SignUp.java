@@ -3,6 +3,7 @@ package com.example.a8_miracle;
 import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,16 +84,36 @@ public class SignUp extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.equals("User registered successfully!")) {
-                            Toast.makeText(SignUp.this, "You have successfully registered.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SignUp.this, Login.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                        Toast.makeText(SignUp.this, response, Toast.LENGTH_LONG).show();
-                        }
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
 
+                            if (status.equals("success")) {
+                                Toast.makeText(SignUp.this, "You have successfully registered.", Toast.LENGTH_SHORT).show();
+
+
+                                String userID = jsonObject.getString("userID");
+
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("userID", userID);
+                                editor.apply();
+
+
+                                Intent intent = new Intent(SignUp.this, Navbar.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(SignUp.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
                 },
                 new Response.ErrorListener() {
                     @Override

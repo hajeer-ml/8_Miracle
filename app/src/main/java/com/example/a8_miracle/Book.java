@@ -14,7 +14,6 @@ public class Book implements Serializable {
     private int categoryID;
 
     // Default constructor
-    public Book() {}
 
     // Parameterized constructor
     public Book(int bookID, String title, String author, double price, float rating, int stockQuantity, String description, String coverImage, String publishedDate, int categoryID) {
@@ -28,6 +27,13 @@ public class Book implements Serializable {
         this.coverImage = coverImage;
         this.publishedDate = publishedDate;
         this.categoryID = categoryID;
+    }
+
+    public Book(int bookID, String title,String author, String coverImage) {
+        this.bookID = bookID;
+        this.title = title;
+        this.author= author;
+        this.coverImage = coverImage;
     }
 
     // Getter and Setter methods

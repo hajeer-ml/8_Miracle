@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/hut">
+
+
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerViewFavorites"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="120dp"/>
+
+<!-- Empty State View -->
+<LinearLayout
+    android:id="@+id/emptyFavoritesView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Favorite">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="fav"
-        android:textSize="100sp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No favorite books yet"
+        android:fontFamily="@font/pacifico"
+        android:textColor="@color/Brown3"
+        android:textSize="35sp"/>
+</LinearLayout>
 </FrameLayout>

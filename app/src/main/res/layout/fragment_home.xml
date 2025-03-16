@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Beige"
-        android:orientation="vertical">
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/Beige">
         <TextView
             android:id="@+id/textv"
             android:layout_width="wrap_content"
@@ -21,36 +23,32 @@
             android:textColor="@color/Brown3"
             android:textSize="50sp"
             android:textStyle="bold" />
+        <!-- زر البحث على اليسار -->
+        <ImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="125dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Search"
+            android:padding="10dp"
+            android:src="@drawable/baseline_manage_search_24" />
+        <!-- زر الإشعارات على اليمين -->
+        <ImageButton
+            android:id="@+id/notificationButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="125dp"
+            android:layout_marginEnd="35dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Notifi"
+            android:padding="10dp"
+            android:src="@drawable/circle_notifications" />
+    </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/searchButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:contentDescription="Search"
-                android:src="@drawable/search" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2" />
-
-            <ImageButton
-                android:id="@+id/notificationButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:contentDescription="Notification"
-                android:src="@drawable/notification" />
-        </LinearLayout>
-    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

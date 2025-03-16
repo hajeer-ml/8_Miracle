@@ -3,6 +3,7 @@ package com.example.a8_miracle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,10 +84,15 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
                                 int categoryID = jsonObject.getInt("CategoryID");
                                 String catName = jsonObject.getString("CatName");
 
-                                // Create a TextView for the category name
+
                                 TextView categoryTitle = new TextView(context);
                                 categoryTitle.setText(catName);
-                                categoryTitle.setTextSize(18);
+                                categoryTitle.setTextSize(25);
+                                categoryTitle.setTypeface(null, Typeface.BOLD);
+                                categoryTitle.setTextColor(ContextCompat.getColor(context, R.color.Brown3));
+                                Typeface typeface = ResourcesCompat.getFont(context, R.font.pacifico);
+                                categoryTitle.setTypeface(typeface);
+
                                 categoryTitle.setPadding(20, 40, 20, 10);
 
                                 // Create a RecyclerView for books under this category

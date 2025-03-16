@@ -23,6 +23,7 @@ public class spltwo extends AppCompatActivity {
         next=findViewById(R.id.next);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                             Intent intent= new Intent(spltwo.this , Login.class);
                             startActivities(new Intent[]{intent});

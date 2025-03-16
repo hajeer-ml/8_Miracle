@@ -4,6 +4,7 @@ package com.example.a8_miracle;
 import android.animation.ObjectAnimator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.Animation;
@@ -17,8 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    private static final int SPLASH_DURATION = 2500; // 3 seconds
+    private static final int SPLASH_DURATION = 2500; // 2.5 seconds
     private ProgressBar progressBar;
     private ImageView logoImage;
     private TextView titleText, subtitleText;
@@ -47,12 +47,22 @@ public class MainActivity extends AppCompatActivity {
         // Progress Bar Animation
         animateProgressBar();
 
-        // Navigate to Main Activity
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        String userID = sharedPreferences.getString("userID", "");
+
+        // Navigate to the appropriate activity after SPLASH_DURATION
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this, spltwo.class);
-                startActivity(intent);
+                if (isLoggedIn && !userID.isEmpty()) {
+
+                    startActivity(new Intent(MainActivity.this, Navbar.class));
+                } else {
+
+                    startActivity(new Intent(MainActivity.this, spltwo.class));
+                }
                 finish();
             }
         }, SPLASH_DURATION);

@@ -1,7 +1,9 @@
  package com.example.a8_miracle;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,84 +32,97 @@ import java.util.HashMap;
 import java.util.Map;
 
  public class Login extends AppCompatActivity {
-    EditText Email, Password;
-    Button btnLogin;
-    TextView txtSignUp;
-    static final String URL="https://8miracle.serv00.net/account/login.php";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
-        Email=findViewById(R.id.Email);
-        Password=findViewById(R.id.Password);
-        btnLogin=findViewById(R.id.btnlogin);
-        txtSignUp=findViewById(R.id.textView3);
+     private EditText Email, Password;
+     private Button btnLogin;
+     private TextView txtSignUp;
+     private static final String URL = "https://8miracle.serv00.net/account/login.php";
 
-        txtSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, SignUp.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginUser();
-            }
-        });
-    }
-    private void loginUser() {
-        final String email = Email.getText().toString().trim();
-        final String password = Password.getText().toString().trim();
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_login);
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter your email and password.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            String message = jsonObject.getString("message");
-                            if (status.equals("success")) {
-                                Toast.makeText(Login.this, "You have successfully logged in.", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(Login.this, Navbar.class);
-                                startActivity(intent);
-                                finish();  // إغلاق شاشة تسجيل الدخول
+         Email = findViewById(R.id.Email);
+         Password = findViewById(R.id.Password);
+         btnLogin = findViewById(R.id.btnlogin);
+         txtSignUp = findViewById(R.id.textView3);
 
-                            } else {
-                                Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(Login.this, "Response parsing error", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(Login.this, "Server connection error", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("password", password);
-                return params;
-            }
-        };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
+         txtSignUp.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(Login.this, SignUp.class));
+             }
+         });
+
+
+         btnLogin.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 String email = Email.getText().toString().trim();
+                 String password = Password.getText().toString().trim();
+
+                 if (!email.isEmpty() && !password.isEmpty()) {
+                     loginUser(email, password);
+                 } else {
+                     Toast.makeText(Login.this, "Please enter your email and password.", Toast.LENGTH_SHORT).show();
+                 }
+             }
+         });
+     }
+
+     private void loginUser(String email, String password) {
+         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                 new Response.Listener<String>() {
+                     @Override
+                     public void onResponse(String response) {
+                         try {
+                             Log.d("LoginResponse", response);
+
+                             JSONObject jsonObject = new JSONObject(response);
+                             String status = jsonObject.getString("status");
+                             String message = jsonObject.getString("message");
+
+                             if (status.equals("success")) {
+                                 String userID = jsonObject.getString("userID");
+
+
+                                 SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                                 editor.putString("userID", userID);
+                                 editor.putBoolean("isLoggedIn", true);
+                                 editor.apply();
+
+                                 Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                 startActivity(new Intent(Login.this, Navbar.class));
+                                 finish();
+                             } else {
+                                 Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
+                             }
+                         } catch (JSONException e) {
+                             Log.e("JSONError", "Error parsing response: " + response, e);
+                             Toast.makeText(Login.this, "Response parsing error", Toast.LENGTH_SHORT).show();
+                         }
+                     }
+                 },
+                 new Response.ErrorListener() {
+                     @Override
+                     public void onErrorResponse(VolleyError error) {
+                         Toast.makeText(Login.this, "Server connection error", Toast.LENGTH_SHORT).show();
+                     }
+                 }) {
+             @Override
+             protected Map<String, String> getParams() {
+                 Map<String, String> params = new HashMap<>();
+                 params.put("email", email);
+                 params.put("password", password);
+                 return params;
+             }
+         };
+
+         RequestQueue requestQueue = Volley.newRequestQueue(this);
+         requestQueue.add(stringRequest);
+     }
  }
