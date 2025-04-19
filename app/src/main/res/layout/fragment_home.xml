@@ -12,6 +12,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/Beige">
+
         <TextView
             android:id="@+id/textv"
             android:layout_width="wrap_content"
@@ -23,7 +24,7 @@
             android:textColor="@color/Brown3"
             android:textSize="50sp"
             android:textStyle="bold" />
-        <!-- زر البحث على اليسار -->
+
         <ImageButton
             android:id="@+id/searchButton"
             android:layout_width="50dp"
@@ -35,20 +36,36 @@
             android:contentDescription="Search"
             android:padding="10dp"
             android:src="@drawable/baseline_manage_search_24" />
-        <!-- زر الإشعارات على اليمين -->
-        <ImageButton
-            android:id="@+id/notificationButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+
+
+        <FrameLayout
+            android:id="@+id/notification_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end|top"
             android:layout_marginTop="125dp"
-            android:layout_marginEnd="35dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Notifi"
-            android:padding="10dp"
-            android:src="@drawable/circle_notifications" />
-    </FrameLayout>
+            android:layout_marginEnd="35dp">
 
+
+            <ImageButton
+                android:id="@+id/notificationButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Notifi"
+                android:padding="10dp"
+                android:src="@drawable/circle_notifications" />
+
+
+            <View
+                android:id="@+id/notification_badge"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/badge_circle"
+                android:visibility="gone" />
+        </FrameLayout>
+    </FrameLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -62,6 +79,5 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp" />
-
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

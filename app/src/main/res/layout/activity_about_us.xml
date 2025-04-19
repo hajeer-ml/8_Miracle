@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:background="@color/Beige">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="About Us"
+            android:fontFamily="@font/pacifico"
+            android:gravity="center"
+            android:textColor="@color/Brown3"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="16dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/adlam_display"
+            android:gravity="center"
+            android:lineSpacingExtra="6dp"
+            android:text="This app aims to facilitate the process of purchasing and exploring books through a simple and smooth user experience, specially designed for reading enthusiasts."
+            android:textColor="@color/Brown3"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Our vision:"
+            android:fontFamily="@font/pacifico"
+            android:gravity="center"
+            android:textColor="@color/Brown3"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="We aspire to build a reading and knowledge-loving community in the Arab world."
+            android:fontFamily="@font/adlam_display"
+            android:gravity="center"
+            android:textColor="@color/Brown3"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contact us:"
+            android:fontFamily="@font/pacifico"
+            android:gravity="center"
+            android:textColor="@color/Brown3"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: 8Miracle@8miracle.serv00.net"
+            android:fontFamily="@font/adlam_display"
+            android:gravity="center"
+            android:textColor="@color/Brown3"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Version: 1.0.0"
+            android:fontFamily="@font/pacifico"
+
+            android:textColor="@color/Brown3"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="end"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

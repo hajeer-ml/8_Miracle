@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@color/Beige"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/order_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order ID: "
+        android:fontFamily="@font/pacifico"
+        android:gravity="center"
+        android:textColor="@color/Brown3"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/order_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date: "
+        android:fontFamily="@font/pacifico"
+        android:gravity="center"
+        android:textColor="@color/Brown3"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/order_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status:"
+        android:fontFamily="@font/pacifico"
+        android:gravity="center"
+        android:textColor="@color/Brown3"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/order_items_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Items:"
+        android:fontFamily="@font/adlam_display"
+        android:gravity="center"
+        android:textColor="@color/Brown3"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/order_total_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: "
+        android:fontFamily="@font/pacifico"
+        android:gravity="center"
+        android:textColor="@color/Brown3"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+
+
+    <Button
+        android:id="@+id/copy_tracking_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Copy Tracking Number"
+        android:fontFamily="@font/pacifico"
+        android:gravity="center"
+        android:textColor="@color/Beige"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:backgroundTint="@color/Brown3"
+         />
+
+</LinearLayout>

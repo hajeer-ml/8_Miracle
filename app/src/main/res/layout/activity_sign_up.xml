@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUp"
-    android:background="@drawable/hu">
+    android:background="@drawable/hu"
+    >
 
     <TextView
         android:id="@+id/textView"
@@ -16,6 +17,7 @@
         android:fontFamily="@font/pacifico"
         android:gravity="center"
         android:text="Get Started"
+        android:textStyle="bold"
         android:textColor="@color/Brown3"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"

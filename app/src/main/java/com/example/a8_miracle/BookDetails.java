@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,19 +43,22 @@ public class BookDetails extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             int updatedBookId = intent.getIntExtra("BookID", -1);
             boolean isFavorite = intent.getBooleanExtra("isFavorite", false);
-
-            Log.d("BookDetails", "Received Broadcast - BookID: " + updatedBookId + ", isFavorite: " + isFavorite);
+            Log.d("BookDetails", "Broadcast Received - UpdatedBookID: " + updatedBookId + ", isFavorite: " + isFavorite);
 
             if (updatedBookId == BookID) {
-                updateLikeButton(isFavorite);
-                sharedPreferences.edit().putBoolean("isLiked_" + BookID, isFavorite).apply();
+                sharedPreferences.edit().putBoolean("isLiked_" + BookID, isFavorite).commit(); // استخدام commit() بدلاً من apply()
+                Log.d("BookDetails", "SharedPreferences updated for BookID: " + BookID + ", isFavorite: " + isFavorite);
+                runOnUiThread(() -> updateLikeButton(isFavorite));
+            } else {
+                Log.d("BookDetails", "Broadcast ignored - BookID mismatch");
             }
         }
     };
 
     private ImageView bookCover, favButton, backButton;
-    private TextView btnIncrease, btnDecrease, bookName, bookAuthor, bookPrice, bookDescription, tvQuantity;
-    private Button btnAddToCart, btnReviews;
+    private TextView btnIncrease, btnDecrease, bookName, bookAuthor, bookPrice, bookDescription, tvQuantity, ratingCountText;
+    private Button btnAddToCart;
+    private RatingBar bookRatingBar;
     private RequestQueue requestQueue;
     private int quantity = 1;
     private boolean isFavorite;
@@ -62,11 +66,13 @@ public class BookDetails extends AppCompatActivity {
     private String userID;
     private String bookImageUrl;
     private SharedPreferences sharedPreferences;
+    private TextView ratingPercentageText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
+
 
         bookCover = findViewById(R.id.bookCover);
         bookName = findViewById(R.id.bookName);
@@ -77,17 +83,22 @@ public class BookDetails extends AppCompatActivity {
         btnIncrease = findViewById(R.id.btnIncrease);
         btnDecrease = findViewById(R.id.btnDecrease);
         btnAddToCart = findViewById(R.id.btnAddToCart);
-        btnReviews = findViewById(R.id.btnReviews);
+        bookRatingBar = findViewById(R.id.bookRatingBar);
+        ratingCountText = findViewById(R.id.ratingCountText);
         favButton = findViewById(R.id.favButton);
         backButton = findViewById(R.id.backbutton);
-        requestQueue = Volley.newRequestQueue(this);
 
+        ratingPercentageText = findViewById(R.id.ratingPercentageText);
+
+        requestQueue = Volley.newRequestQueue(this);
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userID = sharedPreferences.getString("userID", "");
+
 
         Book book = (Book) getIntent().getSerializableExtra("book");
         if (book != null) {
             BookID = book.getBookID();
+            Log.d("BookDetails", "BookID set to: " + BookID);
             displayBookDetails(book);
             fetchBookDetails(BookID);
 
@@ -98,12 +109,26 @@ public class BookDetails extends AppCompatActivity {
             finish();
         }
 
+
+        loadBookRating(BookID);
+
+
+        bookRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            if (fromUser) {
+                int userId = Integer.parseInt(userID);
+                submitRating(userId, BookID, (int) rating);
+            }
+        });
+
+
         backButton.setOnClickListener(v -> finish());
+
 
         btnIncrease.setOnClickListener(v -> {
             quantity++;
             tvQuantity.setText(String.valueOf(quantity));
         });
+
 
         btnDecrease.setOnClickListener(v -> {
             if (quantity > 1) {
@@ -112,7 +137,10 @@ public class BookDetails extends AppCompatActivity {
             }
         });
 
+
         favButton.setOnClickListener(v -> toggleLike());
+
+
         btnAddToCart.setOnClickListener(v -> addToCart());
     }
 
@@ -121,13 +149,24 @@ public class BookDetails extends AppCompatActivity {
         super.onStart();
         IntentFilter filter = new IntentFilter("UPDATE_FAVORITE_STATUS");
         LocalBroadcastManager.getInstance(this).registerReceiver(favoriteUpdateReceiver, filter);
+        Log.d("BookDetails", "BroadcastReceiver registered");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(favoriteUpdateReceiver);
+        Log.d("BookDetails", "BroadcastReceiver unregistered");
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isFavorite = sharedPreferences.getBoolean("isLiked_" + BookID, false);
+        updateLikeButton(isFavorite);
+        Log.d("BookDetails", "onResume: Like button updated to: " + isFavorite);
+    }
+
 
     private void displayBookDetails(Book book) {
         bookName.setText(book.getTitle());
@@ -182,6 +221,7 @@ public class BookDetails extends AppCompatActivity {
                             updateLikeButton(isFavorite);
                             Toast.makeText(BookDetails.this, successMessage, Toast.LENGTH_SHORT).show();
 
+
                             Intent intent = new Intent("UPDATE_FAVORITE_STATUS");
                             intent.putExtra("BookID", BookID);
                             intent.putExtra("isFavorite", isFavorite);
@@ -208,9 +248,82 @@ public class BookDetails extends AppCompatActivity {
     }
 
     private void updateLikeButton(boolean isLiked) {
-        favButton.setImageResource(isLiked ? R.drawable.baseline_favorite_24 : R.drawable.favorite_border_24);
+        runOnUiThread(() -> {
+            favButton.setImageResource(isLiked ? R.drawable.baseline_favorite_24 : R.drawable.favorite_border_24);
+            Log.d("BookDetails", "Like button visually updated to: " + isLiked);
+        });
     }
 
+    private void loadBookRating(int bookId) {
+        String url = "https://8miracle.serv00.net/Home/get_book_rating.php?book_id=" + bookId;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        int totalRatings = jsonObject.getInt("total_ratings");
+                        float avgRating = (float) jsonObject.getDouble("avg_rating");
+
+
+                        float ratingPercentage = (avgRating / 5) * 100;
+
+                        // Update the UI elements
+                        bookRatingBar.setRating(avgRating);
+                        ratingCountText.setText(totalRatings + " ");
+
+
+                        String ratingDescription;
+                        if (avgRating >= 4) {
+                            ratingDescription = "Great";
+                        } else {
+                            ratingDescription = "Good";
+                        }
+
+                        // Update the rating percentage text with the description
+                        ratingPercentageText.setText(String.format("%.0f%% %s", ratingPercentage, ratingDescription));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> Log.e("Volley", "Error: " + error.getMessage()));
+
+        Volley.newRequestQueue(this).add(request);
+    }
+
+    private void submitRating(int userId, int bookId, int rating) {
+        String url = "https://8miracle.serv00.net/Home/submit_rating.php";
+
+        Log.d("BookDetails", "Submitting rating - UserID: " + userId + ", BookID: " + bookId + ", Rating: " + rating);
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject.getBoolean("success")) {
+                            Toast.makeText(this, "Evaluation submitted successfully", Toast.LENGTH_SHORT).show();
+                            loadBookRating(bookId);
+                        } else {
+                            Toast.makeText(this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> Log.e("Volley", "Error: " + error.getMessage())) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("UserID", String.valueOf(userId));
+                params.put("BookID", String.valueOf(bookId));
+                params.put("Rating", String.valueOf(rating));
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(request);
+    }
     private void addToCart() {
         String url = "https://8miracle.serv00.net/Home/add_to_cart.php";
 
@@ -221,13 +334,18 @@ public class BookDetails extends AppCompatActivity {
                         if (jsonResponse.getBoolean("success")) {
                             Toast.makeText(BookDetails.this, "The book has been added to the cart.", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(BookDetails.this, "Failed to add to cart", Toast.LENGTH_SHORT).show();
+                            String errorMessage = jsonResponse.optString("message", "Failed to add to cart");
+                            Toast.makeText(BookDetails.this, errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         Toast.makeText(BookDetails.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                        Log.e("BookDetails", "JSON Error: " + e.getMessage());
                     }
                 },
-                error -> Toast.makeText(BookDetails.this, "Network error", Toast.LENGTH_SHORT).show()
+                error -> {
+                    Toast.makeText(BookDetails.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Log.e("BookDetails", "Volley Error: " + error.toString());
+                }
         ) {
             @Override
             protected Map<String, String> getParams() {

@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class Favorite extends Fragment implements FavAdapter.OnFavoriteRemovedListener {
     private RecyclerView recyclerView;
     private FavAdapter adapter;
@@ -138,8 +139,9 @@ public class Favorite extends Fragment implements FavAdapter.OnFavoriteRemovedLi
 
                     Intent intent = new Intent("UPDATE_FAVORITE_STATUS");
                     intent.putExtra("BookID", bookId);
-                    intent.putExtra("isFavorite", false);
+                    intent.putExtra("isFavorite", false); //  false عند الإزالة
                     LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
+                    Log.d("Favorite", "Broadcast sent for BookID: " + bookId);
                 },
                 error -> Toast.makeText(requireContext(), "Failed to remove", Toast.LENGTH_SHORT).show()
         ) {

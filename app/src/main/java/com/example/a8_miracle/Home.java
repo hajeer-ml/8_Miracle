@@ -1,16 +1,22 @@
 package com.example.a8_miracle;
 
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,9 +31,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -37,7 +45,10 @@ import java.util.Map;
 
 public class Home extends Fragment implements BookAdapter.OnItemClickListener {
     private RequestQueue requestQueue;
-    private LinearLayout parentLayout;  // Parent layout for dynamic views
+    private ImageButton notificationButton;
+    private View notificationBadge;
+    private ImageView searchButton;
+    private LinearLayout parentLayout;
     private Map<Integer, BookAdapter> adapterMap = new HashMap<>();
     private Context context;
 
@@ -47,14 +58,32 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
+
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        context = getContext();  // Initialize context
-        parentLayout = view.findViewById(R.id.parent_layout);  // Parent layout in XML
+        context = getContext();
+        parentLayout = view.findViewById(R.id.parent_layout);
+        searchButton = view.findViewById(R.id.searchButton);
         requestQueue = Volley.newRequestQueue(context);
+
+        notificationButton = view.findViewById(R.id.notificationButton);
+        notificationBadge = view.findViewById(R.id.notification_badge);
+
+
+        checkUnreadNotifications();
+
+
+        searchButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, SearchActivity.class);
+            startActivity(intent);
+        });
+
+        notificationButton.setOnClickListener(v -> fetchAndShowNotifications());
+
         fetchCategories();
     }
 
@@ -106,7 +135,7 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
                                 // Set horizontal scrolling
                                 recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
-                                // Add TextView and RecyclerView to the parent layout
+
                                 parentLayout.addView(categoryTitle);
                                 parentLayout.addView(recyclerView);
 
@@ -174,6 +203,93 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
 
         requestQueue.add(jsonArrayRequest);
     }
+
+    private void checkUnreadNotifications() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userID = sharedPreferences.getString("userID", "");
+
+        if (!userID.isEmpty()) {
+            String url = "https://8miracle.serv00.net/Home/check_unread_notifications.php";
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+
+                            if (status.equals("success")) {
+                                boolean hasUnread = jsonObject.getBoolean("hasUnread");
+                                notificationBadge.setVisibility(hasUnread ? View.VISIBLE : View.GONE);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> {
+                        error.printStackTrace();
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("userID", userID);
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
+            requestQueue.add(stringRequest);
+        }
+    }
+
+    private void fetchAndShowNotifications() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userID = sharedPreferences.getString("userID", "");
+
+        if (!userID.isEmpty()) {
+            String url = "https://8miracle.serv00.net/Home/get_notifications.php";
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+
+                            if (status.equals("success")) {
+                                JSONObject notificationObject = jsonObject.getJSONObject("notification");
+
+                                if (notificationObject != null) {
+                                    Intent intent = new Intent(requireActivity(), Notif.class);
+                                    intent.putExtra("message", notificationObject.getString("message"));
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(requireActivity(), "No notifications found.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(requireActivity(), "Error fetching notifications.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(requireActivity(), "Error parsing response.", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    error -> {
+                        error.printStackTrace();
+                        Toast.makeText(requireActivity(), "Server connection error.", Toast.LENGTH_SHORT).show();
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("userID", userID);
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
+            requestQueue.add(stringRequest);
+        }
+
+    }
+
 
     @Override
     public void onItemClick(Book book) {

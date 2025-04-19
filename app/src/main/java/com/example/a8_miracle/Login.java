@@ -35,7 +35,7 @@ import java.util.Map;
 
      private EditText Email, Password;
      private Button btnLogin;
-     private TextView txtSignUp;
+     private TextView txtSignUp , fopassw;
      private static final String URL = "https://8miracle.serv00.net/account/login.php";
 
      @Override
@@ -48,7 +48,14 @@ import java.util.Map;
          Password = findViewById(R.id.Password);
          btnLogin = findViewById(R.id.btnlogin);
          txtSignUp = findViewById(R.id.textView3);
+         fopassw = findViewById(R.id.textView2);
 
+         fopassw.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(Login.this, ForgotPasswordActivity.class));
+             }
+         });
 
          txtSignUp.setOnClickListener(new View.OnClickListener() {
              @Override

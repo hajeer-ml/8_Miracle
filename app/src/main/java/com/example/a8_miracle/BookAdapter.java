@@ -39,6 +39,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void setBookList(List<Book> books) {
         this.bookList.clear();
         this.bookList.addAll(books);
+
         notifyDataSetChanged();
     }
 

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:background="@color/Beige">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find your interest"
+        android:fontFamily="@font/pacifico"
+        android:textColor="@color/Brown3"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="33sp"
+        android:layout_gravity="center_horizontal" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="By type :"
+        android:fontFamily="@font/pacifico"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/Brown3"
+        android:layout_marginTop="12dp"/>
+
+    <RadioGroup
+        android:id="@+id/categoryRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price :"
+        android:fontFamily="@font/pacifico"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/Brown3"
+        android:layout_marginTop="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/minPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="MIN"
+            android:fontFamily="@font/adlam_display"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:background="@android:drawable/editbox_background"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" - "
+            android:fontFamily="@font/adlam_display"
+            android:textSize="18sp"
+            android:textColor="@color/Brown3"
+            android:padding="8dp"/>
+
+        <EditText
+            android:id="@+id/maxPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/adlam_display"
+            android:hint="MAX"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:background="@android:drawable/editbox_background"/>
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/confirmFilterButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_check"
+        android:background="@null"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

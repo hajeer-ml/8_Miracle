@@ -60,7 +60,7 @@
     <LinearLayout
         android:id="@+id/quantityLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
 
         android:layout_marginStart="16dp"
         android:layout_marginTop="30dp"
@@ -105,7 +105,7 @@
     </LinearLayout>
 <LinearLayout
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:layout_marginTop="30dp"
     android:layout_marginEnd="19dp"
     android:background="@drawable/rounded_background"
@@ -159,26 +159,68 @@
         android:id="@+id/bookDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/pacifico"
+        android:gravity="center"
         android:textColor="@color/Beige"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bookAuthor" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
+        tools:layout_editor_absoluteX="-70dp">
+
+        <RatingBar
+            android:id="@+id/bookRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:stepSize="1"
+            android:progressTint="#FABF35"
+        android:rating="0" />
+
+        <TextView
+            android:id="@+id/ratingCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/pacifico"
+            android:textSize="18sp"
+             />
+
+        <TextView
+            android:id="@+id/ratingPercentageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/pacifico"
+            android:textSize="18sp"
+             />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:padding="10dp">
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/btnAddToCart"
@@ -186,25 +228,11 @@
             android:layout_height="55dp"
             android:layout_gravity="center"
             android:backgroundTint="@color/Beige"
-
             android:fontFamily="@font/pacifico"
             android:text="Add to cart"
             android:textColor="@color/Brown3"
             android:textSize="20sp" />
 
-        <View android:layout_width="20dp" android:layout_height="1dp"/>
-
-        <Button
-            android:id="@+id/btnReviews"
-            android:layout_width="150dp"
-            android:layout_height="55dp"
-            android:text="Reviews"
-            android:backgroundTint="@color/Beige"
-
-            android:fontFamily="@font/pacifico"
-            android:textColor="@color/Brown3"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

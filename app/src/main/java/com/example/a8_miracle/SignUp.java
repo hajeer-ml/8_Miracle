@@ -34,7 +34,7 @@ public class SignUp extends AppCompatActivity {
      EditText Name, Email, Phone, Password , CPassword ;
      Button btnSignUp;
      TextView txtLogin;
-    static final String URL ="https://8miracle.serv00.net/account/signup.php";
+     static final String URL ="https://8miracle.serv00.net/account/signup.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

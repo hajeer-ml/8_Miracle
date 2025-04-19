@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,7 +77,7 @@ public class Cart extends Fragment {
 
         initializeWilayaDeliveryCosts();
         setupWilayaSpinner();
-        setupRadioButtons();
+        setupRadioButtons(view);
         loadCartItems();
 
         checkoutButton.setOnClickListener(v -> confirmOrder());
@@ -122,19 +123,11 @@ public class Cart extends Fragment {
         });
     }
 
-    private void setupRadioButtons() {
-        radioHome.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                updateDeliveryCostBasedOnSelection();
-            }
-        });
-
-        radioOffice.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                updateDeliveryCostBasedOnSelection();
-            }
-        });
+    private void setupRadioButtons(View view) {
+        RadioGroup deliveryOptions = view.findViewById(R.id.delivery_options);
+        deliveryOptions.setOnCheckedChangeListener((group, checkedId) -> updateDeliveryCostBasedOnSelection());
     }
+
 
     private void updateDeliveryCostBasedOnSelection() {
         String selectedWilaya = (String) wilayaSpinner.getSelectedItem();

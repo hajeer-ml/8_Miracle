@@ -9,7 +9,7 @@
     tools:context=".Settings"
     android:background="@drawable/hut">
 
-    <!-- Title -->
+
     <TextView
         android:id="@+id/text3"
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Scrollable Layout -->
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -41,7 +41,7 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <!-- Account Section -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                 android:id="@+id/User"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="12sp"
                 android:background="@drawable/rounded_border"
                 android:clickable="true"
                 android:focusable="true"
@@ -71,16 +71,17 @@
                     app:tint="#5C4033" />
 
                 <TextView
+                    android:id="@+id/tvUserName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/adlam_display"
-                    android:text="User_Name"
+
                     android:textColor="@color/Brown2"
                     android:textSize="16sp" />
             </LinearLayout>
-
+<!--
             <LinearLayout
                 android:id="@+id/notifi"
                 android:layout_width="match_parent"
@@ -108,9 +109,9 @@
                     android:text="Notification sett"
                     android:textColor="@color/Brown2"
                     android:textSize="16sp" />
-            </LinearLayout>
+            </LinearLayout>-->
 
-            <!-- Personal Information Section -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -179,7 +180,7 @@
                     android:textSize="16sp" />
             </LinearLayout> -->
 
-            <!-- App Settings Section -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -214,7 +215,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/adlam_display"
-                    android:text="Help"
+                    android:text="About Us"
                     android:textColor="@color/Brown2"
                     android:textSize="16sp" />
 
