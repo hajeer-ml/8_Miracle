@@ -43,7 +43,7 @@ public class Favorite extends Fragment implements FavAdapter.OnFavoriteRemovedLi
     private List<Book> favoriteBooks;
     private View emptyStateView;
     private String userID;
-
+    private SharedPreferences sharedPreferences;
     private BroadcastReceiver favoriteUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -66,7 +66,9 @@ public class Favorite extends Fragment implements FavAdapter.OnFavoriteRemovedLi
         adapter = new FavAdapter(requireContext(), favoriteBooks, this);
         recyclerView.setAdapter(adapter);
 
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+
+
         userID = sharedPreferences.getString("userID", "");
 
         fetchFavoriteBooks(userID);
@@ -142,6 +144,7 @@ public class Favorite extends Fragment implements FavAdapter.OnFavoriteRemovedLi
                     intent.putExtra("isFavorite", false); //  false عند الإزالة
                     LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
                     Log.d("Favorite", "Broadcast sent for BookID: " + bookId);
+                    sharedPreferences.edit().putBoolean("isLiked_" + bookId, false).apply();
                 },
                 error -> Toast.makeText(requireContext(), "Failed to remove", Toast.LENGTH_SHORT).show()
         ) {
