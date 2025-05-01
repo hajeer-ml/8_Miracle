@@ -4,6 +4,8 @@
         <!-- Customize your light theme here. -->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
     </style>
 
     <style name="Theme._8_Miracle" parent="Base.Theme._8_Miracle" />

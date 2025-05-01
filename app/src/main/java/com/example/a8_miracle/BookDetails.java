@@ -267,7 +267,6 @@ public class BookDetails extends AppCompatActivity {
 
                         float ratingPercentage = (avgRating / 5) * 100;
 
-                        // Update the UI elements
                         bookRatingBar.setRating(avgRating);
                         ratingCountText.setText(totalRatings + " ");
 
@@ -279,7 +278,7 @@ public class BookDetails extends AppCompatActivity {
                             ratingDescription = "Good";
                         }
 
-                        // Update the rating percentage text with the description
+
                         ratingPercentageText.setText(String.format("%.0f%% %s", ratingPercentage, ratingDescription));
 
                     } catch (JSONException e) {

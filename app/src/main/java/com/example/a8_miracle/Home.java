@@ -91,7 +91,7 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
     public void onDestroy() {
         super.onDestroy();
         if (requestQueue != null) {
-            requestQueue.stop(); // Stop the request queue to release resources
+            requestQueue.stop();
         }
     }
 

@@ -87,6 +87,10 @@ public class Cart extends Fragment {
 
     private void initializeWilayaDeliveryCosts() {
         wilayaDeliveryCosts = new HashMap<>();
+        wilayaDeliveryCosts.put("Adrar", new HashMap<String, Double>() {{
+            put("Home", 500.0);
+            put("Office", 400.0);
+        }});
         wilayaDeliveryCosts.put("Tindouf", new HashMap<String, Double>() {{
             put("Home", 500.0);
             put("Office", 400.0);
@@ -99,9 +103,13 @@ public class Cart extends Fragment {
             put("Home", 200.0);
             put("Office", 100.0);
         }});
-        wilayaDeliveryCosts.put("Adrar", new HashMap<String, Double>() {{
-            put("Home", 500.0);
-            put("Office", 400.0);
+        wilayaDeliveryCosts.put("Oran", new HashMap<String, Double>() {{
+            put("Home", 400.0);
+            put("Office", 300.0);
+        }});
+        wilayaDeliveryCosts.put("Tlemcen", new HashMap<String, Double>() {{
+            put("Home", 400.0);
+            put("Office", 300.0);
         }});
     }
 
