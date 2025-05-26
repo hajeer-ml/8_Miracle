@@ -255,42 +255,71 @@ public class BookDetails extends AppCompatActivity {
     }
 
     private void loadBookRating(int bookId) {
+        // Remove the space after book_id=
         String url = "https://8miracle.serv00.net/Home/get_book_rating.php?book_id=" + bookId;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        int totalRatings = jsonObject.getInt("total_ratings");
-                        float avgRating = (float) jsonObject.getDouble("avg_rating");
+                        // Check if success field exists and is true
+                        if (jsonObject.optBoolean("success", false)) {
+                            int totalRatings = jsonObject.getInt("total_ratings");
+                            float avgRating = (float) jsonObject.getDouble("avg_rating");
 
+                            // Calculate rating percentage
+                            float ratingPercentage = (avgRating / 5) * 100;
 
-                        float ratingPercentage = (avgRating / 5) * 100;
+                            // Update UI
+                            runOnUiThread(() -> {
+                                bookRatingBar.setRating(avgRating);
+                                ratingCountText.setText(totalRatings + " ");
 
-                        bookRatingBar.setRating(avgRating);
-                        ratingCountText.setText(totalRatings + " ");
+                                // Set rating description
+                                String ratingDescription;
+                                if (avgRating >= 4) {
+                                    ratingDescription = "Great";
+                                } else if (avgRating >= 3) {
+                                    ratingDescription = "Good";
+                                } else if (avgRating > 0) {
+                                    ratingDescription = "Average";
+                                } else {
+                                    ratingDescription = "Not rated yet";
+                                }
 
-
-                        String ratingDescription;
-                        if (avgRating >= 4) {
-                            ratingDescription = "Great";
+                                // Update rating percentage text
+                                if (totalRatings > 0) {
+                                    ratingPercentageText.setText(String.format("%.0f%% %s", ratingPercentage, ratingDescription));
+                                } else {
+                                    ratingPercentageText.setText("No ratings yet");
+                                }
+                            });
                         } else {
-                            ratingDescription = "Good";
+                            // Handle error response
+                            String message = jsonObject.optString("message", "Error loading ratings");
+                            Log.e("BookDetails", "Rating error: " + message);
                         }
-
-
-                        ratingPercentageText.setText(String.format("%.0f%% %s", ratingPercentage, ratingDescription));
-
                     } catch (JSONException e) {
+                        Log.e("BookDetails", "JSON parsing error: " + e.getMessage());
                         e.printStackTrace();
                     }
                 },
-                error -> Log.e("Volley", "Error: " + error.getMessage()));
+                error -> {
+                    Log.e("BookDetails", "Volley error: " + error.getMessage());
+                    error.printStackTrace();
+                });
 
-        Volley.newRequestQueue(this).add(request);
+        // Set retry policy
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                5000, // Timeout in milliseconds
+                1,    // Max retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+
+        requestQueue.add(request);
     }
 
-    private void submitRating(int userId, int bookId, int rating) {
+    private void submitRating(int userId, int bookId, float rating) {
         String url = "https://8miracle.serv00.net/Home/submit_rating.php";
 
         Log.d("BookDetails", "Submitting rating - UserID: " + userId + ", BookID: " + bookId + ", Rating: " + rating);
@@ -301,15 +330,24 @@ public class BookDetails extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
                             Toast.makeText(this, "Evaluation submitted successfully", Toast.LENGTH_SHORT).show();
+                            // Reload book rating after submission
                             loadBookRating(bookId);
                         } else {
-                            Toast.makeText(this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                            String message = jsonObject.optString("message", "Failed to submit rating");
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                            Log.e("BookDetails", "Rating submission error: " + message);
                         }
                     } catch (JSONException e) {
+                        Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+                        Log.e("BookDetails", "JSON Error: " + e.getMessage());
                         e.printStackTrace();
                     }
                 },
-                error -> Log.e("Volley", "Error: " + error.getMessage())) {
+                error -> {
+                    Toast.makeText(this, "Network error", Toast.LENGTH_SHORT).show();
+                    Log.e("BookDetails", "Volley Error: " + error.toString());
+                    error.printStackTrace();
+                }) {
 
             @Override
             protected Map<String, String> getParams() {
@@ -321,7 +359,14 @@ public class BookDetails extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(request);
+        // Set retry policy
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                5000, // Timeout in milliseconds
+                1,    // Max retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+
+        requestQueue.add(request);
     }
     private void addToCart() {
         String url = "https://8miracle.serv00.net/Home/add_to_cart.php";
