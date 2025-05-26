@@ -25,6 +25,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,6 +50,7 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
     private View notificationBadge;
     private ImageView searchButton;
     private LinearLayout parentLayout;
+    private SwipeRefreshLayout swipeRefresh;
     private Map<Integer, BookAdapter> adapterMap = new HashMap<>();
     private Context context;
 
@@ -69,11 +71,18 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
         parentLayout = view.findViewById(R.id.parent_layout);
         searchButton = view.findViewById(R.id.searchButton);
         requestQueue = Volley.newRequestQueue(context);
-
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         notificationButton = view.findViewById(R.id.notificationButton);
         notificationBadge = view.findViewById(R.id.notification_badge);
 
-
+        swipeRefresh.setOnRefreshListener(() -> {
+            // clear out old views & adapters
+            parentLayout.removeAllViews();
+            adapterMap.clear();
+            fetchCategories();
+            checkUnreadNotifications();
+            swipeRefresh.setRefreshing(false);
+        });
         checkUnreadNotifications();
 
 
@@ -86,6 +95,7 @@ public class Home extends Fragment implements BookAdapter.OnItemClickListener {
 
         fetchCategories();
     }
+
 
     @Override
     public void onDestroy() {

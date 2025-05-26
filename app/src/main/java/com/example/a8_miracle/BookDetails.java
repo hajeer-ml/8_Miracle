@@ -110,7 +110,7 @@ public class BookDetails extends AppCompatActivity {
         }
 
 
-        loadBookRating(BookID);
+        loadBookRating(BookID, Integer.parseInt(userID));
 
 
         bookRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
@@ -254,9 +254,9 @@ public class BookDetails extends AppCompatActivity {
         });
     }
 
-    private void loadBookRating(int bookId) {
+    private void loadBookRating(int bookId, int userID) {
         // Remove the space after book_id=
-        String url = "https://8miracle.serv00.net/Home/get_book_rating.php?book_id=" + bookId;
+        String url = "https://8miracle.serv00.net/Home/get_book_rating.php?book_id=" + bookId + "&userID=" + userID;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
@@ -265,6 +265,7 @@ public class BookDetails extends AppCompatActivity {
                         // Check if success field exists and is true
                         if (jsonObject.optBoolean("success", false)) {
                             int totalRatings = jsonObject.getInt("total_ratings");
+                            int Rating = jsonObject.getInt("Rating");
                             float avgRating = (float) jsonObject.getDouble("avg_rating");
 
                             // Calculate rating percentage
@@ -272,9 +273,9 @@ public class BookDetails extends AppCompatActivity {
 
                             // Update UI
                             runOnUiThread(() -> {
-                                bookRatingBar.setRating(avgRating);
+                                bookRatingBar.setRating(Rating);
                                 ratingCountText.setText(totalRatings + " ");
-
+                                 Log.d("BookDetails", "Rating percentage: " + Rating+ "  user_id:" + userID);
                                 // Set rating description
                                 String ratingDescription;
                                 if (avgRating >= 4) {
@@ -331,7 +332,7 @@ public class BookDetails extends AppCompatActivity {
                         if (jsonObject.getBoolean("success")) {
                             Toast.makeText(this, "Evaluation submitted successfully", Toast.LENGTH_SHORT).show();
                             // Reload book rating after submission
-                            loadBookRating(bookId);
+                            loadBookRating(bookId,userId);
                         } else {
                             String message = jsonObject.optString("message", "Failed to submit rating");
                             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
